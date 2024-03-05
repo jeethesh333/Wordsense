@@ -1,3 +1,4 @@
+# import necessary libraries
 from pathlib import Path
 import re
 from collections import Counter
@@ -6,6 +7,7 @@ import pandas as pd
 import Levenshtein  # Import Levenshtein library for string distance calculation
 
 # Read text file and preprocess data
+# You can also have your own set of words
 file_path = Path('words.txt')
 file_content = file_path.read_text()
 
@@ -37,7 +39,8 @@ def my_autocorrect(input_word):
     return df
 
 # Test input
-test_input = 'hel'
+# Try with a different set of words to know how it is suggesting the words if it's not in vocabulary
+test_input = 'beautiness'
 input_word = test_input.lower()  # Convert input word to lowercase
 
 # Check if input word is in the vocabulary
