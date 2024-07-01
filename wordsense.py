@@ -32,24 +32,29 @@ print(probs)
 
 
 def my_autocorrect(input_word):
-    # Calculate similarity scores using Jaccard distance
-    similarity_scores = [(input_word, textdistance.jaccard(input_word, word), word) for word in word_freq.keys()]
-    # Create DataFrame from similarity scores
-    df = pd.DataFrame(similarity_scores, columns=['Word', 'Prob', 'Similarity'])
-    return df
+    input_word = input_word.lower()
+    
+    if input_word in V:
+        return 'Your word seems to be correct'
+    else:
+        jaccard = textdistance.Jaccard(qval=2)
+        result_set = []
+        for word in word_freq.keys():
+            similarity_score = jaccard(input_word, word)
+            prob = probs[word]
 
-# Test input
-# Try with a different set of words to know how it is suggesting the words if it's not in vocabulary
-test_input = 'beautiness'
-input_word = test_input.lower()  # Convert input word to lowercase
+            result_set.append((word, prob, similarity_score))
 
-# Check if input word is in the vocabulary
-if input_word not in V:
-    result = my_autocorrect(input_word)  # Call my_autocorrect function
-    suggestion_words = result.sort_values(by=['Prob'], ascending=False)  # Sort suggestions by probability
-    print(suggestion_words.head())  # Print top suggestions
-else:
-    print('Your word seems to be correct')
+        
+        df = pd.DataFrame(result_set, columns=['Word', 'Prob', 'Similarity'])
+        # df.head()
+        df = df.sort_values(by=['Similarity','Prob'], ascending=False)
+        # df.head()
+        return df.head()
+
+suggestion_words = my_autocorrect('neverteless')
+suggestion_words
+
 
 # Function to suggest corrections based on Levenshtein distance
 def correction_suggestion(word):
